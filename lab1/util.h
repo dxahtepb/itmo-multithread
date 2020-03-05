@@ -55,4 +55,18 @@ namespace details {
         }
         return matrix;
     }
+
+    using ParamMap = std::unordered_map<std::string, std::any>;
+    template <typename T>
+    T get_param_or_default(const ParamMap& params, const std::string& key, const T& default_value) {
+        auto value_iterator = params.find(key);
+        if (value_iterator == params.end()) {
+            return default_value;
+        }
+        try {
+            return std::any_cast<T>(value_iterator->second);
+        } catch (const std::bad_any_cast& err) {
+            return default_value;
+        }
+    }
 }
