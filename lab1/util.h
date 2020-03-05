@@ -3,7 +3,7 @@
 #include <numeric>
 #include <chrono>
 #include <fstream>
-#include <experimental/iterator>
+#include <filesystem>
 #include "matrix.h"
 
 namespace details {
@@ -40,6 +40,9 @@ namespace details {
 
     template <typename T>
     Matrix<T> read_matrix_from_file(const std::string& file_name) {
+        if (!std::filesystem::exists(file_name)) {
+            throw std::runtime_error("Bad input file or file does not exist \"" + file_name + "\"");
+        }
         std::ifstream input_stream{file_name};
         size_t height = 0;
         size_t width = 0;
