@@ -9,7 +9,7 @@ class Matrix {
     static_assert(std::is_arithmetic_v<T>, "Matrix should be numeric");
 
 public:
-    Matrix(size_t n, size_t m) : n_(n), m_(m), data_(n, std::vector<int>(m)) {
+    Matrix(size_t n, size_t m) : n_{n}, m_{m}, data_(n, std::vector<int>(m)) {
         //empty
     }
 
@@ -23,15 +23,17 @@ public:
         std::move(list.begin(), list.end(), std::back_inserter(data_));
     }
 
-    Matrix() = default;
+    Matrix() : n_{}, m_{}, data_{} {
+        //empty
+    };
 
     Matrix(const Matrix<T>& other) = delete;
 
-    Matrix(Matrix<T>&& other) = default;
+    Matrix(Matrix<T>&& other) noexcept = default;
 
     Matrix<T>& operator=(Matrix<T> const &other) = delete;
 
-    Matrix<T>& operator=(Matrix<T> &&other) = default;
+    Matrix<T>& operator=(Matrix<T> &&other) noexcept = default;
 
     ~Matrix() = default;
 
