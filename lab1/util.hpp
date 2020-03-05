@@ -12,16 +12,24 @@ namespace details {
         return std::accumulate(vec.begin(), vec.end(), 0) / vec.size();
     }
 
-    template <typename Runnable>
-    auto count_time(int run_times, const Runnable& runnable) {
-        std::vector<uint64_t> durations{};
-        for (int i = 0; i < run_times; ++i) {
-            auto start = std::chrono::high_resolution_clock::now();
-            runnable();
-            auto end = std::chrono::high_resolution_clock::now();
-            durations.push_back((end - start).count());
+    template <typename TimeMeasure = std::chrono::nanoseconds>
+    struct TimeCounter {
+        template <typename Runnable>
+        static auto count_time(int run_times, const Runnable& runnable) {
+            std::vector<uint64_t> durations{};
+            for (int i = 0; i < run_times; ++i) {
+                auto start = std::chrono::high_resolution_clock::now();
+                runnable();
+                auto end = std::chrono::high_resolution_clock::now();
+                durations.push_back(std::chrono::duration_cast<TimeMeasure>(end - start).count());
+            }
+            return details::mean(durations);
         }
-        return details::mean(durations);
+    };
+
+    template <typename Runnable>
+    static auto count_time(int run_times, const Runnable& runnable) {
+        return TimeCounter<>::count_time(run_times, runnable);
     }
 
     template <typename T>
