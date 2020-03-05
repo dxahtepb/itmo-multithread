@@ -8,12 +8,13 @@
 
 using namespace details;
 
-constexpr auto DEFAULT_RUN_MODE = "sequential";
+constexpr auto DEFAULT_RUN_MODE = "parallel";
 
 auto get_run_mode(const std::string& mode_name, const std::unordered_map<std::string, std::any>& params = {}) {
     using multiplication_func = std::function<void (Matrix<int> const&, Matrix<int> const&, Matrix<int>&)>;
     std::unordered_map<std::string, multiplication_func> modes {
-        {"sequential", matrix_multiplication_sequential}
+        {"sequential", matrix_multiplication_sequential},
+        {"parallel", matrix_multiplication_parallel}
     };
     return modes.at(mode_name);
 }
