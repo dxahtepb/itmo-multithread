@@ -4,7 +4,7 @@
 #include <chrono>
 #include <fstream>
 #include <experimental/iterator>
-#include "matrix.hpp"
+#include "matrix.h"
 
 namespace details {
     template <typename T>
