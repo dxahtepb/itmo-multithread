@@ -2,7 +2,7 @@
 #include "matrix.h"
 #include "omp.h"
 
-void matrix_multiplication_sequential(Matrix<int> const& matrix_a, Matrix<int> const& matrix_b, Matrix<int>& result) {
+void matrix_multiplication_sequential(const Matrix<int>& matrix_a, const Matrix<int>& matrix_b, Matrix<int>& result) {
     if (matrix_a.width() != matrix_b.height()) {
         throw std::runtime_error("Cannot multiply matrices");
     }
@@ -11,14 +11,14 @@ void matrix_multiplication_sequential(Matrix<int> const& matrix_a, Matrix<int> c
         for (size_t j = 0; j < result.width(); ++j) {
             int64_t res = 0;
             for (size_t k = 0; k < matrix_a.width(); ++k) {
-                res += matrix_a[i][k] * matrix_b[k][j];
+                res += matrix_a.at(i, k) * matrix_b.at(k, j);
             }
-            result[i][j] = res;
+            result.at(i, j) = res;
         }
     }
 }
 
-void matrix_multiplication_parallel(Matrix<int> const& matrix_a, Matrix<int> const& matrix_b, Matrix<int>& result,
+void matrix_multiplication_parallel(const Matrix<int>& matrix_a, const Matrix<int>& matrix_b, Matrix<int>& result,
                                     int thread_num) {
     if (matrix_a.width() != matrix_b.height()) {
         throw std::runtime_error("Cannot multiply matrices");
@@ -34,16 +34,16 @@ void matrix_multiplication_parallel(Matrix<int> const& matrix_a, Matrix<int> con
         for (size_t j = 0; j < result.width(); ++j) {
             int64_t res = 0;
             for (size_t k = 0; k < matrix_a.width(); ++k) {
-                res += matrix_a[i][k] * matrix_b[k][j];
+                res += matrix_a.at(i, k) * matrix_b.at(k, j);
             }
-            result[i][j] = res;
+            result.at(i, j) = res;
         }
     }
 }
 
 void matrix_multiplication_parallel_dynamic(
-        Matrix<int> const& matrix_a,
-        Matrix<int> const& matrix_b,
+        const Matrix<int>& matrix_a,
+        const Matrix<int>& matrix_b,
         Matrix<int>& result,
         int thread_num,
         int chunk_size) {
@@ -65,9 +65,9 @@ void matrix_multiplication_parallel_dynamic(
         for (size_t j = 0; j < result.width(); ++j) {
             int64_t res = 0;
             for (size_t k = 0; k < matrix_a.width(); ++k) {
-                res += matrix_a[i][k] * matrix_b[k][j];
+                res += matrix_a.at(i, k) * matrix_b.at(k, j);
             }
-            result[i][j] = res;
+            result.at(i, j) = res;
         }
     }
 }

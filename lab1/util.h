@@ -50,7 +50,7 @@ namespace details {
         Matrix<T> matrix{height, width};
         for (size_t i = 0; i < height; ++i) {
             for (size_t j = 0; j < height; ++j) {
-                input_stream >> matrix[i][j];
+                input_stream >> matrix.at(i, j);
             }
         }
         return matrix;

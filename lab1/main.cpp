@@ -40,16 +40,17 @@ int main(int argc, char* argv[]) {
 
     auto a = read_matrix_from_file<int>(arguments.at(1));
     auto b = read_matrix_from_file<int>(arguments.at(2));
-    Matrix<int> result(a.height(), b.width());
-
     std::string mode = (argc >= 3) ? arguments.at(3) : "";
     auto partially_applied = get_run_mode(mode, arguments.get_options());
+
+    Matrix<int> result(a.height(), b.width());
+
     auto runnable = [&a, &b, &result, &partially_applied] () {
         partially_applied(a, b, result);
     };
 
     auto milliseconds_counter = TimeCounter<std::chrono::milliseconds>::count_time<decltype(runnable)>;
-    std::cout << "Mean time: " << milliseconds_counter(1, runnable) << std::endl;
+    std::cout << milliseconds_counter(1, runnable) << std::endl;
     write_matrix_to_file(DEFAULT_OUTPUT_FILE, result);
 
     return 0;
