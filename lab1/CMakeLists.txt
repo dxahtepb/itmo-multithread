@@ -8,6 +8,6 @@ if(OPENMP_FOUND)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
-set(SOURCES main.cpp util.h matrix.h matrix_multiplication.h command_line.h)
+set(SOURCES cpp/main.cpp cpp/util.h cpp/matrix.h cpp/matrix_multiplication.h cpp/command_line.h)
 
 add_executable(lab1 ${SOURCES})
