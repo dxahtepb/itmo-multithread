@@ -4,9 +4,10 @@ import os
 import subprocess
 from datetime import datetime
 
-from lab1.generate import generate_matrix, write_matrix
+from lab1.generate import generate_matrix, write_matrix, generate_identity
 
-if __name__ == '__main__':
+
+def run_tests():
     os.chdir('cmake-build-debug')
 
     left_height = 200
@@ -20,10 +21,10 @@ if __name__ == '__main__':
 
     # noinspection PyUnreachableCode
     if True:
-        matrix_a = generate_matrix(left_height, left_width, (0, 100))
+        matrix_a = generate_matrix(left_height, left_width, (0, 1000))
         write_matrix(matrix_a_path, matrix_a)
 
-        matrix_b = generate_matrix(left_width, left_height, (0, 100))
+        matrix_b = generate_matrix(right_height, right_width, (0, 1000))
         write_matrix(matrix_b_path, matrix_b)
 
     options = {
@@ -57,13 +58,17 @@ if __name__ == '__main__':
             run_time = int(str(stdout, encoding='utf-8').strip())
             # noinspection PyTypeChecker
             run_results['runs'].append({
-                    'options': copy.deepcopy(options),
-                    'run_time': run_time,
+                'options': copy.deepcopy(options),
+                'run_time': run_time,
             })
             print(f'{left_height}x{right_width} {i}: {run_time}')
         except subprocess.CalledProcessError as err:
             print(f'process finished with error: {err}')
 
+    return run_results
+
+
+def write_run_results(run_results):
     try:
         try:
             os.mkdir('../runs')
@@ -73,3 +78,12 @@ if __name__ == '__main__':
             json.dump(run_results, file, indent=2)
     except IOError as err:
         print(f'Can not write results: {err}')
+
+
+def main():
+    results = run_tests()
+    write_run_results(results)
+
+
+if __name__ == '__main__':
+    main()
