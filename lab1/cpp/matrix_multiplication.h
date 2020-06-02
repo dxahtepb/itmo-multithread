@@ -70,7 +70,7 @@ void matrix_multiplication_parallel_dynamic(const Matrix<long>& matrix_a, const 
 }
 
 void matrix_multiplication_parallel_guided(const Matrix<long>& matrix_a, const Matrix<long>& matrix_b,
-                                            Matrix<long>& result, int thread_num, int chunk_size) {
+                                            Matrix<long>& result, int thread_num) {
     if (matrix_a.width() != matrix_b.height()) {
         throw std::runtime_error("Cannot multiply matrices");
     }
@@ -80,11 +80,7 @@ void matrix_multiplication_parallel_guided(const Matrix<long>& matrix_a, const M
         omp_set_num_threads(thread_num);
     }
 
-    if (chunk_size < 0) {
-        chunk_size = static_cast<int>(result.height()) / omp_get_max_threads();
-    }
-
-    #pragma omp parallel for schedule(guided, chunk_size) collapse(2)
+    #pragma omp parallel for schedule(guided) collapse(2)
     for (size_t i = 0; i < result.height(); ++i) {
         for (size_t j = 0; j < result.width(); ++j) {
             int64_t res = 0;
