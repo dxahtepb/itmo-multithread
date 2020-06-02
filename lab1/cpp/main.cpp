@@ -31,7 +31,7 @@ get_run_mode(const std::string& mode_name, const Options& options = {}) {
         auto thread_num = options.get_int_option_or_default("thread_num", -1);
         auto chunk_size = options.get_int_option_or_default("chunk_size", -1);
         return [thread_num, chunk_size] (const Matrix<long>& a, const Matrix<long>& b, Matrix<long>& res) {
-            matrix_multiplication_parallel_guided(a, b, res, thread_num);
+            matrix_multiplication_parallel_guided(a, b, res, thread_num, chunk_size);
         };
     }
     // sequential mode as default
