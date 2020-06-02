@@ -53,10 +53,6 @@ void matrix_multiplication_parallel_dynamic(const Matrix<long>& matrix_a, const 
         omp_set_num_threads(thread_num);
     }
 
-    if (chunk_size < 0) {
-        chunk_size = static_cast<int>(result.height()) / omp_get_max_threads();
-    }
-
     #pragma omp parallel for schedule(dynamic, chunk_size) collapse(2)
     for (size_t i = 0; i < result.height(); ++i) {
         for (size_t j = 0; j < result.width(); ++j) {
@@ -78,10 +74,6 @@ void matrix_multiplication_parallel_guided(const Matrix<long>& matrix_a, const M
     if (thread_num > 0) {
         omp_set_dynamic(0);
         omp_set_num_threads(thread_num);
-    }
-
-    if (chunk_size < 0) {
-        chunk_size = static_cast<int>(result.height()) / omp_get_max_threads();
     }
 
     #pragma omp parallel for schedule(guided, chunk_size) collapse(2)
