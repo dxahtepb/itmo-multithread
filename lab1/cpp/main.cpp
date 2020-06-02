@@ -16,15 +16,22 @@ get_run_mode(const std::string& mode_name, const Options& options = {}) {
     }
     if (mode_name == "parallel") {
         auto thread_num = options.get_int_option_or_default("thread_num", -1);
-        return [thread_num] (Matrix<long> const& a, Matrix<long> const& b, Matrix<long>& res) {
+        return [thread_num] (const Matrix<long>& a, const Matrix<long>& b, Matrix<long>& res) {
             matrix_multiplication_parallel(a, b, res, thread_num);
         };
     }
     if (mode_name == "parallel_dynamic") {
         auto thread_num = options.get_int_option_or_default("thread_num", -1);
         auto chunk_size = options.get_int_option_or_default("chunk_size", -1);
-        return [thread_num, chunk_size] (Matrix<long> const& a, Matrix<long> const& b, Matrix<long>& res) {
+        return [thread_num, chunk_size] (const Matrix<long>& a, const Matrix<long>& b, Matrix<long>& res) {
             matrix_multiplication_parallel_dynamic(a, b, res, thread_num, chunk_size);
+        };
+    }
+    if (mode_name == "parallel_guided") {
+        auto thread_num = options.get_int_option_or_default("thread_num", -1);
+        auto chunk_size = options.get_int_option_or_default("chunk_size", -1);
+        return [thread_num, chunk_size] (const Matrix<long>& a, const Matrix<long>& b, Matrix<long>& res) {
+            matrix_multiplication_parallel_guided(a, b, res, thread_num, chunk_size);
         };
     }
     // sequential mode as default
