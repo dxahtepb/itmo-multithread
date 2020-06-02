@@ -39,7 +39,7 @@ namespace details {
     }
 
     template <typename T>
-    Matrix<T> read_matrix_from_file(const std::string& file_name) {
+    Matrix<T> read_matrix_from_file(const std::string& file_name, bool is_orc = false) {
         if (!std::filesystem::exists(file_name)) {
             throw std::runtime_error("Bad input file or file does not exist \"" + file_name + "\"");
         }
@@ -47,9 +47,9 @@ namespace details {
         size_t height = 0;
         size_t width = 0;
         input_stream >> height >> width;
-        Matrix<T> matrix{height, width};
+        Matrix<T> matrix{height, width, is_orc};
         for (size_t i = 0; i < height; ++i) {
-            for (size_t j = 0; j < height; ++j) {
+            for (size_t j = 0; j < width; ++j) {
                 input_stream >> matrix.at(i, j);
             }
         }

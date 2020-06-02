@@ -2,7 +2,8 @@
 #include "matrix.h"
 #include "omp.h"
 
-void matrix_multiplication_sequential(const Matrix<int>& matrix_a, const Matrix<int>& matrix_b, Matrix<int>& result) {
+void matrix_multiplication_sequential(const Matrix<long>& matrix_a, const Matrix<long>& matrix_b,
+                                      Matrix<long>& result) {
     if (matrix_a.width() != matrix_b.height()) {
         throw std::runtime_error("Cannot multiply matrices");
     }
@@ -18,7 +19,7 @@ void matrix_multiplication_sequential(const Matrix<int>& matrix_a, const Matrix<
     }
 }
 
-void matrix_multiplication_parallel(const Matrix<int>& matrix_a, const Matrix<int>& matrix_b, Matrix<int>& result,
+void matrix_multiplication_parallel(const Matrix<long>& matrix_a, const Matrix<long>& matrix_b, Matrix<long>& result,
                                     int thread_num) {
     if (matrix_a.width() != matrix_b.height()) {
         throw std::runtime_error("Cannot multiply matrices");
@@ -29,7 +30,7 @@ void matrix_multiplication_parallel(const Matrix<int>& matrix_a, const Matrix<in
         omp_set_num_threads(thread_num);
     }
 
-    #pragma omp parallel for
+    #pragma omp parallel for collapse(2)
     for (size_t i = 0; i < result.height(); ++i) {
         for (size_t j = 0; j < result.width(); ++j) {
             int64_t res = 0;
@@ -41,12 +42,8 @@ void matrix_multiplication_parallel(const Matrix<int>& matrix_a, const Matrix<in
     }
 }
 
-void matrix_multiplication_parallel_dynamic(
-        const Matrix<int>& matrix_a,
-        const Matrix<int>& matrix_b,
-        Matrix<int>& result,
-        int thread_num,
-        int chunk_size) {
+void matrix_multiplication_parallel_dynamic(const Matrix<long>& matrix_a, const Matrix<long>& matrix_b,
+                                            Matrix<long>& result, int thread_num, int chunk_size) {
     if (matrix_a.width() != matrix_b.height()) {
         throw std::runtime_error("Cannot multiply matrices");
     }
@@ -60,7 +57,7 @@ void matrix_multiplication_parallel_dynamic(
         chunk_size = static_cast<int>(result.height()) / omp_get_max_threads();
     }
 
-    #pragma omp parallel for schedule(dynamic, chunk_size)
+    #pragma omp parallel for schedule(dynamic, chunk_size) collapse(2)
     for (size_t i = 0; i < result.height(); ++i) {
         for (size_t j = 0; j < result.width(); ++j) {
             int64_t res = 0;
