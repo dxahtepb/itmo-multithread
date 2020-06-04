@@ -34,7 +34,7 @@ public:
 
     Matrix(Matrix<T>&& other) noexcept = default;
 
-    Matrix<T>& operator=(Matrix<T> const &other) = delete;
+    Matrix<T>& operator=(const Matrix<T> &other) = delete;
 
     Matrix<T>& operator=(Matrix<T> &&other) noexcept = default;
 
@@ -56,20 +56,21 @@ public:
         return n_;
     }
 
-    friend std::ostream& operator<<(std::ostream& output_stream, const Matrix& matrix) {
-        output_stream << matrix.height() << " " << matrix.width() << std::endl;
-        for (size_t i = 0; i < matrix.n_; ++i) {
-            for (size_t j = 0; j < matrix.m_; ++j) {
-                output_stream << matrix.at(i, j);
-            }
-            output_stream << std::endl;
-        }
-        return output_stream;
-    }
-
 private:
     size_t n_;
     size_t m_;
     std::vector<T> data_;
     bool is_orc = false;
 };
+
+template <typename T>
+std::ostream& operator<<(std::ostream& output_stream, const Matrix<T>& matrix) {
+    output_stream << matrix.height() << " " << matrix.width() << std::endl;
+    for (size_t i = 0; i < matrix.height(); ++i) {
+        for (size_t j = 0; j < matrix.width(); ++j) {
+            output_stream << matrix.at(i, j);
+        }
+        output_stream << std::endl;
+    }
+    return output_stream;
+}
