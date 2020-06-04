@@ -12,7 +12,7 @@ namespace details {
         return std::accumulate(vec.begin(), vec.end(), 0) / vec.size();
     }
 
-    template <typename TimeMeasure = std::chrono::nanoseconds>
+    template <typename TimeMeasure = std::chrono::milliseconds>
     struct TimeCounter {
         template <typename Runnable>
         static auto count_time(int run_times, const Runnable& runnable) {

@@ -59,8 +59,7 @@ int main(int argc, char* argv[]) {
     };
 
     auto run_repetitions = named_options.get_int_option_or_default("runs", 1);
-    auto milliseconds_counter = TimeCounter<std::chrono::milliseconds>::count_time<decltype(runnable)>;
-    std::cout << milliseconds_counter(run_repetitions, runnable) << std::endl;
+    std::cout << count_time(run_repetitions, runnable) << std::endl;
     write_matrix_to_file(DEFAULT_OUTPUT_FILE, result);
 
     return 0;
