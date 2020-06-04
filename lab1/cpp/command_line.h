@@ -28,6 +28,17 @@ struct Options {
     }
 
     [[maybe_unused]]
+    bool get_bool_option(const std::string& name) const {
+        return params_.at(name) == "true";
+    }
+
+    [[maybe_unused]]
+    bool get_bool_option_or_default(const std::string& name, bool default_) const {
+        auto element = params_.find(name);
+        return (element != params_.end()) ? element->second == "true" : default_;
+    }
+
+    [[maybe_unused]]
     Options& add_option(std::string option, std::string value) {
         params_.emplace(std::move(option), std::move(value));
         return *this;
