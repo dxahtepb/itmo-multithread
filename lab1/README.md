@@ -9,17 +9,17 @@ Requirements:
   
 System info:
 * OS: Ubuntu Linux 18.04
-* CPU info: [lscpu output](./cpu_characteristics.md)
+* CPU info: [lscpu output](md/cpu_characteristics.md)
 
 Benchmark results could be found on [GDrive folder](https://drive.google.com/drive/folders/19qHRaOD4-fhEXwkaPt3r8iA10EfreSiD?usp=sharing).
 
-### Speedup with different schedule types comparison 
+### Speedup with different schedulers comparison 
 Speedup is relative to the sequential run for the same matrix of the same size.
 All 12 logical cores are used for this benchmark.
 
 ![Image](./images/scheduling_types.png)
 
-### Column-oriented right matrix representation optimization
+### Column-oriented right matrix optimization
 
 ![Image](./images/orc_vs_ocr.png)
 
