@@ -21,8 +21,8 @@ void mpi_finalize() {
 void read_data(int world_rank, const std::string& matrix_file_name,
                const std::string& initial_approximation_file_name, LinearSystem* d) {
     if (world_rank == 0) {
-        d->size = read_matrix(matrix_file_name, d->matrix, d->b);
-        if (!is_strictly_diagonal_dominant(d->matrix, d->size)) {
+        d->size = read_matrix(matrix_file_name, d->tmp_matrix, d->b);
+        if (!is_strictly_diagonal_dominant(d->tmp_matrix, d->size)) {
             throw std::runtime_error("Matrix must be strictly diagonal dominant!");
         }
         auto x_size = read_initial_approximation(initial_approximation_file_name, d->x_initial);
@@ -32,14 +32,29 @@ void read_data(int world_rank, const std::string& matrix_file_name,
     }
 }
 
-void broadcast_data(int world_rank, LinearSystem* d) {
+void broadcast_data(int world_rank, LinearSystem* d, const std::vector<int>& offsets,
+        const std::vector<int>& batch_sizes) {
     MPI_Bcast(&d->size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+    std::vector<int> scaled_batch_sizes{};
+    scaled_batch_sizes.reserve(batch_sizes.size());
+    for (auto batch_size : batch_sizes) {
+        scaled_batch_sizes.push_back(batch_size * d->size);
+    }
+    std::vector<int> scaled_offsets(offsets.size());
+    for (int i = 1; i < offsets.size(); ++i) {
+        scaled_offsets[i] = scaled_offsets[i - 1] + scaled_batch_sizes[i - 1];
+    }
+
+    d->matrix.resize(scaled_batch_sizes.at(world_rank));
+
     if (world_rank != 0) {
-        d->matrix.resize(d->size * d->size);
         d->b.resize(d->size);
         d->x_initial.resize(d->size);
     }
-    MPI_Bcast(d->matrix.data(), d->size * d->size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+    MPI_Scatterv(d->tmp_matrix.data(), scaled_batch_sizes.data(), scaled_offsets.data(), MPI_DOUBLE,
+            d->matrix.data(), scaled_batch_sizes.at(world_rank), MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Bcast(d->b.data(), d->size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Bcast(d->x_initial.data(), d->size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 }
@@ -49,14 +64,19 @@ calculate_offset_and_batch_size(int world_size, int world_rank, int size) {
     std::vector<int> offsets(world_size);
     std::vector<int> batch_sizes(world_size);
 
-    int one_job_size = size / world_size;
-    int odd_job = size % world_size;
-    for (int i = 0; i < world_size; ++i) {
-        batch_sizes[i] = i < odd_job ? one_job_size + 1 : one_job_size;
+    if (world_rank == 0) {
+        int one_job_size = size / world_size;
+        int odd_job = size % world_size;
+        for (int i = 0; i < world_size; ++i) {
+            batch_sizes[i] = i < odd_job ? one_job_size + 1 : one_job_size;
+        }
+        for (int i = 1; i < world_size; ++i) {
+            offsets[i] = offsets[i - 1] + batch_sizes[i - 1];
+        }
     }
-    for (int i = 1; i < world_size; ++i) {
-        offsets[i] = offsets[i - 1] + batch_sizes[i - 1];
-    }
+
+    MPI_Bcast(offsets.data(), offsets.size(), MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(batch_sizes.data(), batch_sizes.size(), MPI_INT, 0, MPI_COMM_WORLD);
 
     return {offsets, batch_sizes};
 }
@@ -79,9 +99,10 @@ int main(int argc, char* argv[]) {
 
         auto start = std::chrono::high_resolution_clock::now();
 
-        broadcast_data(world_rank, &linear_system);
-
         auto [offset, batch_size] = calculate_offset_and_batch_size(world_size, world_rank, linear_system.size);
+
+        broadcast_data(world_rank, &linear_system, offset, batch_size);
+
         auto [jacobi_status, result] =
                 jacobi_method_mpi(linear_system, max_iterations, eps, world_rank, offset, batch_size);
 

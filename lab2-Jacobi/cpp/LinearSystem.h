@@ -5,6 +5,7 @@ struct LinearSystem {
     std::vector<double> matrix;
     std::vector<double> b;
     std::vector<double> x_initial;
+    std::vector<double> tmp_matrix;
 
     LinearSystem(const LinearSystem& other) = delete;
     LinearSystem& operator=(const LinearSystem& other) = delete;

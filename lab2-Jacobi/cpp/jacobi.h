@@ -44,16 +44,16 @@ jacobi_method_mpi(const LinearSystem& linear_system, int max_iterations, double 
 
     for (int iteration = 0; iteration < max_iterations; ++iteration) {
         std::copy(new_x.begin(), new_x.end(), prev_x.begin());
-        for (int i = offset; i < offset + batch_size; ++i) {
-            auto diagonal_element = linear_system.matrix[i * size + i];
+        for (int i = 0; i < batch_size; ++i) {
+            auto diagonal_element = linear_system.matrix[i * size + i + offset];
             double acc = 0.0;
             for (int j = 0; j < size; ++j) {
-                if (i == j) {
+                if (i + offset == j) {
                     continue;
                 }
                 acc += linear_system.matrix[i * size + j] * prev_x[j];
             }
-            new_x[i] = (linear_system.b[i] - acc) / diagonal_element;
+            new_x[i + offset] = (linear_system.b[i + offset] - acc) / diagonal_element;
         }
 
         MPI_Allgatherv(new_x.data() + offset, batch_size, MPI_DOUBLE,

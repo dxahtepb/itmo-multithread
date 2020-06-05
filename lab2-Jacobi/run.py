@@ -32,7 +32,7 @@ def run_tests():
     executable = './cmake-build-debug/lab2'
     mpiexec = '/opt/openmpi-4.0.3/bin/mpiexec'
 
-    eps = 1e-5
+    eps = 1e-10
 
     executable_named_params = {
         'max_iterations': 100000,
@@ -52,9 +52,9 @@ def run_tests():
         matrix_path = f'./matrices/{size}_matrix.txt'
         initial_path = f'./matrices/{size}_initial.txt'
 
-        matrix, initial = generate(size)
-        write_matrix(matrix_path, matrix)
-        write_vector(initial_path, initial)
+        # matrix, initial = generate(size)
+        # write_matrix(matrix_path, matrix)
+        # write_vector(initial_path, initial)
 
         for thread_num in (1, 2, 4, 6):
             output = f'./matrices/{size}_{thread_num}_result.txt'
@@ -72,15 +72,14 @@ def run_tests():
                 print(f'{size} {thread_num}: {str(out.strip(), encoding="utf-8")}')
                 print(f'stderr: {str(err, encoding="utf-8")}')
 
-                if out:
-                    run_time = int(out)
-                    # noinspection PyTypeChecker
-                    run_results['runs'].append({
-                        'thread_num': thread_num,
-                        'mpi_options': copy.deepcopy(mpi_options),
-                        'size': size,
-                        'run_time': run_time,
-                    })
+                run_time = int(out)
+                # noinspection PyTypeChecker
+                run_results['runs'].append({
+                    'thread_num': thread_num,
+                    'mpi_options': copy.deepcopy(mpi_options),
+                    'size': size,
+                    'run_time': run_time,
+                })
 
             except subprocess.CalledProcessError as err:
                 print(f'process finished with error: {err}')
