@@ -2,7 +2,8 @@
 
 ### Andrey Chausov M41051
 
-* Lab 1: Matrix multiplication using OpenMP [ALMOST HERE]
+* Lab 1: Matrix multiplication using OpenMP [DONE]
 * Lab 2: Jacobi linear equation solver using MPI [ALMOST HERE]
-* Lab 3: Jacobi linear equation solver using MPI [WIP]
-* Lab 5: Logs aggregation using Spark [Done]
+* Lab 3: Parallel quicksort using MPI [WIP]
+* Lab 4: Parallel Dijkstra algorithm [TBD]
+* Lab 5: Logs aggregation using Spark [DONE]
