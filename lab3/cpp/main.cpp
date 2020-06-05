@@ -3,6 +3,7 @@
 #include <chrono>
 #include <thread>
 #include "command_line.h"
+#include "util.h"
 
 std::tuple<int, int> mpi_init(int* argc, char*** argv) {
     MPI_Init(argc, argv);
@@ -22,10 +23,18 @@ int main(int argc, char* argv[]) {
 
         auto input_filename = arguments.at(1);
         auto output_filename = arguments.at(2);
+
+        auto vec = read_vec<int>(input_filename);
+
         auto start = std::chrono::high_resolution_clock::now();
+
+        if (world_rank == 0) {
+            std::sort(vec.begin(), vec.end(), std::less<>{});
+        }
 
         auto end = std::chrono::high_resolution_clock::now();
         if (world_rank == 0) {
+            write_vec(output_filename, vec);
             std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << std::endl;
         }
 

@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 find_package(MPI REQUIRED)
 include_directories(SYSTEM ${MPI_INCLUDE_PATH})
-set(SOURCES cpp/main.cpp cpp/command_line.h)
+set(SOURCES cpp/main.cpp cpp/command_line.h cpp/util.h)
 
 add_executable(lab3 ${SOURCES})
 target_link_libraries(lab3 ${MPI_LIBRARIES})

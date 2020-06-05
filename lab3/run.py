@@ -21,9 +21,7 @@ def run_tests():
     executable = './cmake-build-debug/lab3'
     mpiexec = '/opt/openmpi-4.0.3/bin/mpiexec'
 
-    executable_named_params = {
-        'max_iterations': 100000,
-    }
+    executable_named_params = {}
 
     mpi_options = {
         '-np': 1
@@ -34,11 +32,11 @@ def run_tests():
         'runs': []
     }
 
-    for size in (15, ):
+    for size in (100_000, 1_000_000, 10_000_000, 100_000_000):
         matrix_path = f'./vectors/{size}_matrix.txt'
         write_vector(matrix_path, generate(size))
 
-        for thread_num in (1, 2, 4, 6):
+        for thread_num in (1, 2, 4, ):
             output = f'./vectors/{size}_{thread_num}_result.txt'
 
             mpi_options['-np'] = thread_num
@@ -47,8 +45,7 @@ def run_tests():
             mpi_options_list = make_options_list(mpi_options)
 
             try:
-                proc = subprocess.Popen([mpiexec, *mpi_options_list, executable, matrix_path, output,
-                                         '--options', *options_list],
+                proc = subprocess.Popen([mpiexec, *mpi_options_list, executable, matrix_path, output],
                                         stderr=subprocess.PIPE, stdout=subprocess.PIPE)
                 out, err = proc.communicate()
                 print(f'{size} {thread_num}: {str(out.strip(), encoding="utf-8")}')
