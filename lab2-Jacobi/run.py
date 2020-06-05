@@ -52,9 +52,9 @@ def run_tests():
         matrix_path = f'./matrices/{size}_matrix.txt'
         initial_path = f'./matrices/{size}_initial.txt'
 
-        # matrix, initial = generate(size)
-        # write_matrix(matrix_path, matrix)
-        # write_vector(initial_path, initial)
+        matrix, initial = generate(size)
+        write_matrix(matrix_path, matrix)
+        write_vector(initial_path, initial)
 
         for thread_num in (1, 2, 4, 6):
             output = f'./matrices/{size}_{thread_num}_result.txt'
