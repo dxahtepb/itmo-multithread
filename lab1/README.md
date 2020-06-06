@@ -13,6 +13,8 @@ System info:
 
 Benchmark results could be found on [GDrive folder](https://drive.google.com/drive/folders/19qHRaOD4-fhEXwkaPt3r8iA10EfreSiD?usp=sharing).
 
+Build and run guide [link](./md/run.md).
+
 For multiplication A(n,k) * B(k, m) standard 3-loops O(n * k * m) algorithm are used. Iterations with total length of n * m are distributed between workers. Each worker computes its respective part of the resulting matrix C. Since A and B are read-only and every element Cij of C is calculated independently, there is no contention and dataraces between worker threads.
 
 ### Speedup with different schedulers comparison 
@@ -33,6 +35,7 @@ One widely known optimization for matrix multiplication is to make it more CPU c
 The problem is that right (`B`) matrix is traversed in column-first order, resulting in cache miss on every iteration for big enough `k`.
 Optimization resides in storing right matrix in column-row order, this gains a significant boost in performance for particular matrices.
 This effect could be seen on the following graph, where for bigger `k` runtime of column-oriented version is much more low.
+While for relatively small 200, which is somewhat less than L1 cache size (moreover presuming preloading), run time is equal.
 
 ![Image](./images/orc_vs_ocr.png)
 
