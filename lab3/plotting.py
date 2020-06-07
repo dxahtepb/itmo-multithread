@@ -9,8 +9,8 @@ def read_json(filename):
         return json.load(file)
 
 
-def plot():
-    parent_dir = 'runs/test_runs/'
+def plot(name):
+    parent_dir = f'runs/{name}/'
     filenames = os.listdir(parent_dir)
 
     run_times_for_sizes = {}
@@ -25,7 +25,7 @@ def plot():
                 run_result['run_time']
             ))
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(9, 6))
     ax = fig.add_subplot(111)
 
     for line_label in run_times_for_sizes:
@@ -41,11 +41,11 @@ def plot():
     lgd = ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), fancybox=True, ncol=2)
 
     os.makedirs('./images/', exist_ok=True)
-    plt.savefig('./images/sort_1.png', bbox_extra_artists=(lgd, ), bbox_inches='tight')
+    plt.savefig(f'./images/{name}.png', bbox_extra_artists=(lgd, ), bbox_inches='tight')
 
 
 def main():
-    plot()
+    plot('100_samples_2')
 
 
 if __name__ == '__main__':
