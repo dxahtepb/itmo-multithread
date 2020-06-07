@@ -4,6 +4,6 @@
 
 * Lab 1: Matrix multiplication using OpenMP [DONE]
 * Lab 2: Jacobi linear equation solver using MPI [DONE]
-* Lab 3: Parallel quicksort using MPI [WIP]
+* Lab 3: Parallel quicksort using MPI [DONE]
 * Lab 4: Parallel Dijkstra algorithm [TBD]
 * Lab 5: Logs aggregation using Spark [DONE]
