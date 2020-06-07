@@ -30,9 +30,7 @@ def run_tests():
         'runs': []
     }
 
-    # for size in (100, ):
     for size in (100, 1_000, 10_000, 100_000, 1_000_000, 10_000_000, 50_000_000, 100_000_000, 200_000_000):
-    # for size in (100, 1_000, 10_000, 100_000, 1_000_000,):
         matrix_path = f'./vectors/{size}_matrix.txt'
         if not os.path.exists(matrix_path):
             write_vector(matrix_path, generate(size))
@@ -92,7 +90,6 @@ def write_run_results(run_results, sub_folder='misc'):
 
 
 def main():
-    # run_tests()
     write_run_results(run_tests(), 'test_runs')
 
 
