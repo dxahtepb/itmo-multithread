@@ -1,4 +1,4 @@
-## Lab 2 Parallel Jacobi linear systems solver with MPI
+## Lab 3 Parallel Quicksort with MPI
 
 Requirements:
 * gcc (9+ for stable std::filesystem and c++17)
