@@ -10,7 +10,7 @@ Requirements:
   
 System info:
 * OS: Ubuntu Linux 18.04
-* CPU info: [lscpu output](md/cpu_characteristics.md)
+* CPU info: [lscpu output](../lab1/md/cpu_characteristics.md)
 
 Benchmark results could be found on [GDrive folder](https://drive.google.com/drive/folders/1Jh6aeOSJUaHjqyEtNUFMLFRvb9dGE1MC?usp=sharing).
 
