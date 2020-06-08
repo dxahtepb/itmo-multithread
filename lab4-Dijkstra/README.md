@@ -6,7 +6,6 @@ Requirements:
 * openmp (part of gcc-9)
 * python3 (3.6+ for f-strings)
   * matplotlib
-  * networkx
 
 System info:
 * OS: Ubuntu Linux 18.04
