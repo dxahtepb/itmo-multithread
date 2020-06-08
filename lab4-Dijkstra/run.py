@@ -29,13 +29,12 @@ def run_tests():
         'runs': []
     }
 
-    # for size in (10, 100, 300, 500, 800, 1_000, 2_000, 4_000, 5_000, 10_000, 20_000):
-    for size in ( 5_000,):
+    for size in (10, 100, 300, 500, 800, 1_000, 2_000, 4_000, 5_000, 10_000, 20_000):
         matrix_path = f'./matrices/{size}_matrix.txt'
         if not os.path.exists(matrix_path):
             write_matrix(matrix_path, generate_full_graph(size))
 
-        for thread_num in (1, 2, 4, 6, 8, 12):
+        for thread_num in (1, 2, 4, 6, 8, 10, 12):
             output = f'./matrices/{size}_{thread_num}_result.txt'
             start_element = 0
 
