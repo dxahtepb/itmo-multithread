@@ -44,9 +44,6 @@ std::vector<int> sequential_dijkstra(const AdjacencyList& matrix, int source) {
 }
 
 int min_distance_omp(const std::vector<int>& dist, const std::vector<bool>& used_set, int max_threads) {
-    int min_value = std::numeric_limits<int>::max();
-    int min_index = 0;
-
     std::vector<std::pair<int, int>> local_minimums(max_threads, {std::numeric_limits<int>::max(), -1});
 
     #pragma omp parallel

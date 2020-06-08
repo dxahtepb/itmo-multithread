@@ -70,14 +70,14 @@ struct TimeCounterDecorator {
         return std::move(return_value);
     }
 
-    int get_run_time() {
+    uint64_t get_run_time() {
         return run_time;
     }
 
 private:
     Runnable runnable;
     int run_times = 1;
-    uint64_t run_time = -1;
+    uint64_t run_time = 0;
 
     template <typename T>
     T mean(const std::vector<T>& vec) {
