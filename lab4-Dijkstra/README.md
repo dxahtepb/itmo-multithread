@@ -45,3 +45,7 @@ The above graph was made for a full graph (without self-loops) with `|E| = Θ(|V
 One could observe that for small graphs overhead for the threads startup dominates over speedup gained from concurrency.
 In the studied algorithm an each thread job is almost equal.
 This is confirmed with tests for different openmp scheduling types (could be found on gdrive). As expected, they did not show any difference for `static`, `guided` and `dynamic` schedulers.
+
+With reduction:
+
+![Image](./images/reduction.png)

@@ -4,6 +4,7 @@
 #include <limits>
 #include <queue>
 #include <omp.h>
+#include <algorithm>
 #include "my_defs.h"
 
 
@@ -63,6 +64,22 @@ int min_distance_omp(const std::vector<int>& dist, const std::vector<bool>& used
     return std::min_element(local_minimums.begin(), local_minimums.end())->second;
 }
 
+int min_distance_omp_reduce(const std::vector<int>& dist, const std::vector<bool>& used_set, int max_threads) {
+    auto min_value_index_pair = std::make_pair<>(std::numeric_limits<int>::max(), 0);
+
+    #pragma omp declare reduction \
+    (min_index_reduction : decltype(min_value_index_pair) : omp_out = std::min(omp_out, omp_in)) \
+    initializer(omp_priv = {std::numeric_limits<int>::max(), 0})
+
+    #pragma omp parallel for reduction(min_index_reduction : min_value_index_pair)
+    for (int v = 0; v < dist.size(); ++v) {
+        if (!used_set[v] && dist[v] <= min_value_index_pair.first) {
+            min_value_index_pair = {dist[v], v};
+        }
+    }
+    return min_value_index_pair.second;
+}
+
 std::vector<int> dijkstra_omp(const AdjacencyList& matrix, int source,
                               int num_threads, omp_sched_t schedule, int chunk_size) {
     int size = matrix.size();
@@ -78,7 +95,7 @@ std::vector<int> dijkstra_omp(const AdjacencyList& matrix, int source,
 
     dist[source] = 0;
     for (int step = 0; step < size - 1; ++step) {
-        int from = min_distance_omp(dist, used, max_threads);
+        int from = min_distance_omp_reduce(dist, used, max_threads);
         if (dist[from] == std::numeric_limits<int>::max()) {
             break;
         }

@@ -45,7 +45,7 @@ def plot(name):
 
 
 def main():
-    plot('static')
+    plot('reduction')
 
 
 if __name__ == '__main__':
